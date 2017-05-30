@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="css/reset.css" />
+<link rel="stylesheet" type="text/css" href="css/akottr.css" />
+<link rel="stylesheet" type="text/css" href="css/dragtable.css" />
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/jquery.dragtable.js"></script>
+
+<!-- only for jquery.chili-2.2.js -->
+<script src="js/jquery-migrate-1.1.1.js"></script>
+<script type="text/javascript" src="js/jquery.chili-2.2.js"></script>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    $('.defaultTable').dragtable();
+
+    $('#footerTable').dragtable({excludeFooter:true});
+
+    $('#onlyHeaderTable').dragtable({maxMovingRows:1});
+
+    $('#persistTable').dragtable({persistState:'/someAjaxUrl'});
+
+    $('#handlerTable').dragtable({dragHandle:'.some-handle'});
+
+    $('#constrainTable').dragtable({dragaccept:'.accept'});
+
+    $('#customPersistTable').dragtable({persistState: function(table) {
+        table.el.find('th').each(function(i) {
+          if(this.id != '') {table.sortOrder[this.id]=i;}
+        });
+        $.ajax({url: '/myAjax?hello=world',
+                data: table.sortOrder});
+      }
+    });
+
+    $('#localStorageTable').dragtable({
+        persistState: function(table) {
+          if (!window.sessionStorage) return;
+          var ss = window.sessionStorage;
+          table.el.find('th').each(function(i) {
+            if(this.id != '') {table.sortOrder[this.id]=i;}
+          });
+          ss.setItem('tableorder',JSON.stringify(table.sortOrder));
+        },
+        restoreState: eval('(' + window.sessionStorage.getItem('tableorder') + ')')
+    });
+
+  });
+</script>
+
+
+<title>swap-column</title>
+</head>
+<body>
+
+<div id="pageWrap">
+<div id="content" class="main-content">
+
+
+  <div class="demo">
+    
+    <div class="demo-content">
+      <table class="defaultTable sar-table">
+        <thead>
+          <tr>
+            <th>Company Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Email</th>
+           
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>The Patissier</td><td>67373369</td><td>4 Mohammed Sultan Road</td><td>enquiry@thepatissier.com</td>
+          </tr>
+          <tr>
+            <td>Dunkin Donnets</td><td>65018511</td><td>2 orchard turn</td><td>enquiry@donnets.com</td>
+
+          </tr>
+          <tr>
+            <td>Flor patissieri</td><td>63334202</td><td>44 A Princep St</td><td>enquiry@flor.com</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+    
+   
+ 
+
+</div>
+</div>
+</body>
+</html>
